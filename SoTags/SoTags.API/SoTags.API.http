@@ -1,0 +1,6 @@
+@SoTags.API_HostAddress = http://localhost:5133
+
+GET {{SoTags.API_HostAddress}}/sotag/
+Accept: application/json
+
+###
