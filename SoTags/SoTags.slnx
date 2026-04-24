@@ -1,6 +1,6 @@
 <Solution>
   <Project Path="SoTags.API/SoTags.API.csproj" />
   <Project Path="SoTags.Domain/SoTags.Domain.csproj" />
-  <Project Path="SoTags.Downloader/SoTags.Downloader.csproj" />
+  <Project Path="SoTags.DataProvider/SoTags.DataProvider.csproj" />
   <Project Path="SoTags.Repo/SoTags.Repo.csproj" />
 </Solution>
