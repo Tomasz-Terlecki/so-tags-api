@@ -1,5 +1,7 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SoTags.Domain.Models;
+using SoTags.Domain.Queries;
 
 namespace SoTags.API.Controllers;
 
@@ -7,12 +9,17 @@ namespace SoTags.API.Controllers;
 [Route("[controller]")]
 public class SoTagsController : ControllerBase
 {
-    [HttpGet]
-    public IEnumerable<SoTag> Get()
+    private readonly IMediator _mediator;
+
+    public SoTagsController(IMediator mediator)
     {
-        return [
-            new(1, "Tag1", "Description1"),
-            new(2, "Tag2", "Description2")
-        ];
+        _mediator = mediator;
+    }
+
+    [HttpGet]
+    public async Task<IEnumerable<SoTag>> Get()
+    {
+        var query = new GetSoTagsQuery();
+        return await _mediator.Send(query);
     }
 }
