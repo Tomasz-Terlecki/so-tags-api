@@ -58,11 +58,6 @@ public class SoTagProvider : ISoTagProvider
         return tags;
     }
 
-    public Task<IEnumerable<SoTag>> GetAllAsync(CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
     /// <summary>
     /// Fetches a single page of tags from the StackOverflow API
     /// </summary>

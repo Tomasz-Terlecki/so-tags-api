@@ -10,11 +10,4 @@ public interface IExternalDataSource<TExternalDataModel>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>List of downloaded models</returns>
     Task<IEnumerable<TExternalDataModel>> GetAsync(int count, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Gets all available external data models.
-    /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <returns>All available models</returns>
-    Task<IEnumerable<TExternalDataModel>> GetAllAsync(CancellationToken cancellationToken = default);
 }
