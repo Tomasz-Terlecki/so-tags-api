@@ -27,7 +27,7 @@ public class SoTagsController : ControllerBase
     [HttpPost("refetch")]
     public async Task<IActionResult> Refetch([FromQuery] int count = 1000)
     {
-        await _mediator.Send(new RefetchTagsCommand { Count = count });
+        await _mediator.Send(new RefetchTagsCommand(count));
         return Ok(new { message = $"Successfully refetched {count} tags." });
     }
 }
