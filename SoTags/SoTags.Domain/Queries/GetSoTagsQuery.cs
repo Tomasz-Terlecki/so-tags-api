@@ -3,6 +3,6 @@ using SoTags.Domain.Models;
 
 namespace SoTags.Domain.Queries;
 
-public class GetSoTagsQuery : IRequest<IEnumerable<SoTag>>
+public record GetSoTagsQuery : IRequest<IEnumerable<SoTag>>
 {
 }
