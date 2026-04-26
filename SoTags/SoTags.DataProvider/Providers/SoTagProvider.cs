@@ -1,27 +1,9 @@
-using System.Text.Json.Serialization;
+using SoTags.DataProvider.Dtos;
 using SoTags.Domain.Interfaces.DataProviders;
 using SoTags.Domain.Models;
 
 namespace SoTags.DataProvider.Providers;
 
-/// <summary>
-/// DTO for deserializing StackOverflow API tag response
-/// </summary>
-internal record SoTagDto(
-    [property: JsonPropertyName("name")] string Name,
-    [property: JsonPropertyName("count")] int Count,
-    [property: JsonPropertyName("has_synonyms")] bool HasSynonyms
-);
-
-/// <summary>
-/// DTO for deserializing StackOverflow API response wrapper
-/// </summary>
-internal record SoTagsResponseDto(
-    [property: JsonPropertyName("items")] List<SoTagDto> Items,
-    [property: JsonPropertyName("has_more")] bool HasMore,
-    [property: JsonPropertyName("quota_max")] int QuotaMax,
-    [property: JsonPropertyName("quota_remaining")] int QuotaRemaining
-);
 
 /// <summary>
 /// Provides functionality to download tags from StackOverflow
@@ -93,9 +75,12 @@ public class SoTagProvider : ISoTagProvider
                     break;
 
                 var soTag = new SoTag(
-                    Id: Guid.NewGuid(),
-                    Name: tagDto.Name,
-                    Description: string.Empty
+                    Guid.NewGuid(),
+                    tagDto.HasSynonyms,
+                    tagDto.IsModeratorOnly,
+                    tagDto.IsRequired,
+                    tagDto.Count,
+tagDto.Name
                 );
                 tags.Add(soTag);
             }
@@ -106,6 +91,11 @@ public class SoTagProvider : ISoTagProvider
         }
 
         return tags;
+    }
+
+    public Task<IEnumerable<SoTag>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -141,10 +131,5 @@ public class SoTagProvider : ISoTagProvider
         {
             throw new InvalidOperationException($"Failed to deserialize StackOverflow API response: {ex.Message}", ex);
         }
-    }
-
-    public Task<IEnumerable<SoTag>> GetAllAsync(CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
     }
 }
