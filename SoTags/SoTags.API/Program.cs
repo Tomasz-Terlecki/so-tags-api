@@ -38,7 +38,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<SoTagDbContext>();
-    db.Database.Migrate();
+    await db.Database.MigrateAsync();
 }
 
 // Refetch tags on application startup

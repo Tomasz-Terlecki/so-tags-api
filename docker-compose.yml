@@ -26,7 +26,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:8080
-      ConnectionStrings__DefaultConnection: "Server=mssql,1433;Database=sotags_db;User Id=sa;Password=SoTags@Password123;TrustServerCertificate=true;"
+      ConnectionStrings__DefaultConnection: "Server=mssql,1433;Database=sotags_db_dev;User Id=sa;Password=SoTags@Password123;TrustServerCertificate=true;"
     ports:
       - "8080:8080"
     depends_on:

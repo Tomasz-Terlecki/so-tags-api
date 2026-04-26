@@ -12,9 +12,9 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["SoTags.API/SoTags.API.csproj", "SoTags.API/"]
+COPY ["SoTags/SoTags.API/SoTags.API.csproj", "SoTags.API/"]
 RUN dotnet restore "./SoTags.API/SoTags.API.csproj"
-COPY . .
+COPY ./SoTags .
 WORKDIR "/src/SoTags.API"
 RUN dotnet build "./SoTags.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
