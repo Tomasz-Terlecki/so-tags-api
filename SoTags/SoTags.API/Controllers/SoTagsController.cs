@@ -1,8 +1,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SoTags.Domain.Models;
+using SoTags.Domain.Dtos;
 using SoTags.Domain.Queries;
 using SoTags.Domain.Commands;
+using SoTags.Domain.Models;
 
 namespace SoTags.API.Controllers;
 
@@ -18,16 +19,16 @@ public class SoTagsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IEnumerable<SoTag>> Get()
+    public async Task<ActionResult<PaginatedResponseDto<SoTag>>> Get([FromQuery] GetSoTagsQuery query)
     {
-        var query = new GetSoTagsQuery();
-        return await _mediator.Send(query);
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
 
     [HttpPost("refetch")]
     public async Task<IActionResult> Refetch([FromBody] RefetchTagsCommand command)
     {
-var result =         await _mediator.Send(command);
+        var result = await _mediator.Send(command);
 
         if (result == -1)
         {

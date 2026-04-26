@@ -1,3 +1,4 @@
+using SoTags.Domain.Enums;
 using SoTags.Domain.Models;
 
 namespace SoTags.Domain.Interfaces.Repositories;
@@ -5,12 +6,14 @@ namespace SoTags.Domain.Interfaces.Repositories;
 public interface ISoTagRepository
 {
     /// <summary>
-    /// Gets a paged collection of SoTags.
+    /// Gets a paged collection of SoTags with optional sorting.
     /// </summary>
     /// <param name="pageNumber">The page number (1-based).</param>
     /// <param name="pageSize">The number of items per page.</param>
+    /// <param name="sortBy">The field to sort by.</param>
+    /// <param name="sortDirection">The sort direction.</param>
     /// <returns>A collection of SoTags for the specified page.</returns>
-    Task<IEnumerable<SoTag>> GetPagedAsync(int pageNumber, int pageSize);
+    Task<IEnumerable<SoTag>> GetPagedAsync(int pageNumber, int pageSize, SortBy sortBy = SortBy.None, SortDirection sortDirection = SortDirection.Ascending);
 
     /// <summary>
     /// Gets the total count of SoTags.

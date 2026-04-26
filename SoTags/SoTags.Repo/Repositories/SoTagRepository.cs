@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SoTags.Domain.Enums;
 using SoTags.Domain.Interfaces.Repositories;
 using SoTags.Domain.Models;
 
@@ -13,7 +14,7 @@ public class SoTagRepository : ISoTagRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<SoTag>> GetPagedAsync(int pageNumber, int pageSize)
+    public async Task<IEnumerable<SoTag>> GetPagedAsync(int pageNumber, int pageSize, SortBy sortBy = SortBy.None, SortDirection sortDirection = SortDirection.Ascending)
     {
         if (pageNumber < 1)
             pageNumber = 1;
@@ -22,7 +23,22 @@ public class SoTagRepository : ISoTagRepository
 
         var skip = (pageNumber - 1) * pageSize;
 
-        return await _context.SoTags
+        IQueryable<SoTag> query = _context.SoTags;
+
+        // Apply sorting
+        query = sortBy switch
+        {
+            SortBy.None => query,
+            SortBy.Name => sortDirection == SortDirection.Ascending
+                ? query.OrderBy(t => t.Name)
+                : query.OrderByDescending(t => t.Name),
+            SortBy.Share => sortDirection == SortDirection.Ascending
+                ? query.OrderBy(t => t.Count)
+                : query.OrderByDescending(t => t.Count),
+            _ => throw new ArgumentException("Invalid sort by value", nameof(sortBy))
+        };
+
+        return await query
             .Skip(skip)
             .Take(pageSize)
             .ToListAsync();
