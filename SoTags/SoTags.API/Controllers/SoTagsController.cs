@@ -25,9 +25,15 @@ public class SoTagsController : ControllerBase
     }
 
     [HttpPost("refetch")]
-    public async Task<IActionResult> Refetch([FromQuery] int count = 1000)
+    public async Task<IActionResult> Refetch([FromBody] RefetchTagsCommand command)
     {
-        await _mediator.Send(new RefetchTagsCommand(count));
-        return Ok(new { message = $"Successfully refetched {count} tags." });
+var result =         await _mediator.Send(command);
+
+        if (result == -1)
+        {
+            return StatusCode(500, new { message = "An error occurred while refetching tags." });
+        }
+
+        return Ok(new { message = $"Successfully refetched {result} tags." });
     }
 }

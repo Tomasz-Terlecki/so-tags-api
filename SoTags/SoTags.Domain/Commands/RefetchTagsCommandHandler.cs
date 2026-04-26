@@ -4,7 +4,7 @@ using SoTags.Domain.Interfaces.Repositories;
 
 namespace SoTags.Domain.Commands;
 
-public class RefetchTagsCommandHandler : IRequestHandler<RefetchTagsCommand, bool>
+public class RefetchTagsCommandHandler : IRequestHandler<RefetchTagsCommand, int>
 {
     private readonly ISoTagProvider _soTagProvider;
     private readonly ISoTagRepository _soTagRepository;
@@ -15,7 +15,7 @@ public class RefetchTagsCommandHandler : IRequestHandler<RefetchTagsCommand, boo
         _soTagRepository = soTagRepository ?? throw new ArgumentNullException(nameof(soTagRepository));
     }
 
-    public async Task<bool> Handle(RefetchTagsCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(RefetchTagsCommand request, CancellationToken cancellationToken)
     {
         await _soTagRepository.RemoveAllAsync();
         await _soTagRepository.SaveChangesAsync();
@@ -30,9 +30,9 @@ public class RefetchTagsCommandHandler : IRequestHandler<RefetchTagsCommand, boo
         var saveResult = await _soTagRepository.SaveChangesAsync();
         if (saveResult != tags.Count())
         {
-            return false;
+            return -1;
         }
 
-        return true;
+        return saveResult;
     }
 }
