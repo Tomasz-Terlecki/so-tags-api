@@ -19,41 +19,6 @@ public class SoTagProvider : ISoTagProvider
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     }
     
-
-    public async Task<int> GetCountAsync(CancellationToken cancellationToken = default)
-    {
-        // Implementation for getting the total count of tags
-        var url = $"{StackOverflowApiBaseUrl}/tags" +
-                  $"?pagesize=1" +
-                  $"&page=1" +
-                  $"&order=desc" +
-                  $"&sort=popular" +
-                  $"&site=stackoverflow";
-
-        try
-        {
-            var response = await _httpClient.GetAsync(url, cancellationToken);
-            response.EnsureSuccessStatusCode();
-
-            var content = await response.Content.ReadAsStringAsync(cancellationToken);
-            var options = new System.Text.Json.JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-
-            var tagsResponse = System.Text.Json.JsonSerializer.Deserialize<SoTagsResponseDto>(content, options);
-            return tagsResponse?.QuotaMax ?? 0; // Using QuotaMax as an approximation for total count
-        }
-        catch (HttpRequestException ex)
-        {
-            throw new InvalidOperationException($"Failed to fetch tags from StackOverflow API: {ex.Message}", ex);
-        }
-        catch (System.Text.Json.JsonException ex)
-        {
-            throw new InvalidOperationException($"Failed to deserialize StackOverflow API response: {ex.Message}", ex);
-        }
-    }
-
     public async Task<IEnumerable<SoTag>> GetAsync(int count, CancellationToken cancellationToken = default)
     {
         if (count <= 0)
@@ -80,7 +45,7 @@ public class SoTagProvider : ISoTagProvider
                     tagDto.IsModeratorOnly,
                     tagDto.IsRequired,
                     tagDto.Count,
-tagDto.Name
+                    tagDto.Name
                 );
                 tags.Add(soTag);
             }
