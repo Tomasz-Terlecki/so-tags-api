@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SoTags.Domain.Models;
 using SoTags.Domain.Queries;
+using SoTags.Domain.Commands;
 
 namespace SoTags.API.Controllers;
 
@@ -21,5 +22,12 @@ public class SoTagsController : ControllerBase
     {
         var query = new GetSoTagsQuery();
         return await _mediator.Send(query);
+    }
+
+    [HttpPost("refetch")]
+    public async Task<IActionResult> Refetch([FromQuery] int count = 1000)
+    {
+        await _mediator.Send(new RefetchTagsCommand { Count = count });
+        return Ok(new { message = $"Successfully refetched {count} tags." });
     }
 }

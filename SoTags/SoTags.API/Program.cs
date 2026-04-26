@@ -1,8 +1,12 @@
 using SoTags.Domain.Queries;
+using SoTags.Domain.Commands;
 using SoTags.DataProvider.Providers;
 using SoTags.Domain.Interfaces.DataProviders;
+using SoTags.Domain.Interfaces.Repositories;
 using SoTags.Repo;
+using SoTags.Repo.Repositories;
 using Microsoft.EntityFrameworkCore;
+using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +19,8 @@ builder.Services.AddOpenApi();
 // Add SQL Server DbContext
 builder.Services.AddDbContext<SoTagDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<ISoTagRepository, SoTagRepository>();
 
 builder.Services.AddHttpClient<ISoTagProvider, SoTagProvider>()
     .ConfigureHttpClient(client =>
@@ -33,6 +39,13 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<SoTagDbContext>();
     db.Database.Migrate();
+}
+
+// Refetch tags on application startup
+using (var scope = app.Services.CreateScope())
+{
+    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+    await mediator.Send(new RefetchTagsCommand { Count = 1000 });
 }
 
 // Configure the HTTP request pipeline.
