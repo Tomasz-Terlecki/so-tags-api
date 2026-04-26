@@ -1,4 +1,6 @@
 using SoTags.Domain.Queries;
+using SoTags.DataProvider.Providers;
+using SoTags.Domain.Interfaces.DataProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddHttpClient<ISoTagProvider, SoTagProvider>();
 
 builder.Services.AddMediatR(cfg => {
     cfg.RegisterServicesFromAssembly(typeof(GetSoTagsQuery).Assembly);

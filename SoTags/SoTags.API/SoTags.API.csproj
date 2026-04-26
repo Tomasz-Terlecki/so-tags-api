@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SoTags.Domain\SoTags.Domain.csproj" />
+    <ProjectReference Include="..\SoTags.DataProvider\SoTags.DataProvider.csproj" />
   </ItemGroup>
 
 </Project>
