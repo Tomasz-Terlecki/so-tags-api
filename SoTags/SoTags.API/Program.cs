@@ -10,7 +10,11 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddHttpClient<ISoTagProvider, SoTagProvider>();
+builder.Services.AddHttpClient<ISoTagProvider, SoTagProvider>()
+    .ConfigureHttpClient(client =>
+    {
+        client.DefaultRequestHeaders.Add("User-Agent", "SoTagsApp/1.0");
+    });
 
 builder.Services.AddMediatR(cfg => {
     cfg.RegisterServicesFromAssembly(typeof(GetSoTagsQuery).Assembly);
