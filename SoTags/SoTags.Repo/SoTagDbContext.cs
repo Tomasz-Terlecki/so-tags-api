@@ -30,6 +30,10 @@ public class SoTagDbContext : DbContext
             entity.Property(e => e.Count)
                 .IsRequired();
 
+            entity.Property(e => e.Share)
+                .IsRequired()
+                .HasPrecision(10, 4);
+
             entity.Property(e => e.HasSynonyms)
                 .IsRequired();
 

@@ -23,22 +23,10 @@ public class GetSoTagsQueryHandler : IRequestHandler<GetSoTagsQuery, PaginatedRe
 
         var pagedTags = await _soTagRepository.GetPagedAsync(pageNumber, pageSize, request.SortBy, request.SortDirection);
 
-        var tags = pagedTags.Select(tag =>
-            new SoTag(
-                tag.Id,
-                tag.HasSynonyms,
-                tag.IsModeratorOnly,
-                tag.IsRequired,
-                tag.Count,
-                tag.Name
-            )
-        );
-
-        // Calculate total pages
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
 
         return new PaginatedResponseDto<SoTag>(
-            tags,
+            pagedTags,
             pageNumber,
             pageSize,
             totalCount,

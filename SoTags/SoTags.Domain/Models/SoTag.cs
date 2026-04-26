@@ -6,6 +6,7 @@ public record SoTag : ExternalDataModel
     public bool IsModeratorOnly { get; init; }
     public bool IsRequired { get; init; }
     public int Count { get; init; }
+    public decimal Share { get; init; }
     public string Name { get; init; }
 
     public SoTag(Guid Id, bool HasSynonyms, bool IsModeratorOnly, bool IsRequired, int Count, string Name) : base(Id)
@@ -14,6 +15,7 @@ public record SoTag : ExternalDataModel
         this.IsModeratorOnly = IsModeratorOnly;
         this.IsRequired = IsRequired;
         this.Count = Count;
+        this.Share = 0; // Share will be calculated by the stored procedure
         this.Name = Name;
     }
 }
