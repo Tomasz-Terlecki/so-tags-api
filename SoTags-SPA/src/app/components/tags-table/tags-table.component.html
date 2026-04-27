@@ -5,6 +5,10 @@
 
   <!-- Controls -->
   <div class="controls">
+    <button class="btn btn-refetch" (click)="refetchTags()" [disabled]="isLoading()">
+      🔄 Odśwież
+    </button>
+
     <div class="control-group">
       <label for="sortBy">Sortuj po:</label>
       <select id="sortBy" [(ngModel)]="sortByValue" (ngModelChange)="onSortByChange($event)">

@@ -90,6 +90,23 @@ export class TagsTableComponent implements OnInit {
     this.loadTags();
   }
 
+  refetchTags() {
+    this.isLoading.set(true);
+    this.error.set(null);
+
+    this.apiService.refetchSoTags().subscribe({
+      next: () => {
+        this.pageNumber.set(1);
+        this.loadTags();
+      },
+      error: (err: unknown) => {
+        console.error('Error refetching tags:', err);
+        this.error.set('Błąd podczas odświeżania tagów');
+        this.isLoading.set(false);
+      }
+    });
+  }
+
   totalPages(): number {
     return Math.ceil(this.totalCount() / this.pageSize());
   }
