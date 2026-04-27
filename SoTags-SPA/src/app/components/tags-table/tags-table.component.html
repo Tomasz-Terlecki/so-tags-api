@@ -1,0 +1,98 @@
+<div class="container">
+  <div class="header">
+    <h1>Stack Overflow Tags</h1>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="control-group">
+      <label for="sortBy">Sortuj po:</label>
+      <select id="sortBy" [(ngModel)]="sortByValue" (ngModelChange)="onSortByChange($event)">
+        <option *ngFor="let option of sortByOptions" [value]="option">
+          {{ option }}
+        </option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label for="sortDirection">Kierunek:</label>
+      <select id="sortDirection" [(ngModel)]="sortDirectionValue" (ngModelChange)="onSortDirectionChange($event)">
+        <option *ngFor="let direction of sortDirections" [value]="direction">
+          {{ direction === 'asc' ? 'Rosnąco' : 'Malejąco' }}
+        </option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label for="pageSize">Elementy na stronie:</label>
+      <select id="pageSize" [(ngModel)]="pageSizeValue" (ngModelChange)="onPageSizeChange($event)">
+        <option *ngFor="let size of pageSizeOptions" [value]="size">
+          {{ size }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error()" class="error-message">
+    {{ error() }}
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading()" class="loading">
+    Ładowanie...
+  </div>
+
+  <!-- Table -->
+  <table *ngIf="!isLoading() && tags().length > 0" class="tags-table">
+    <thead>
+      <tr>
+        <th>Tag</th>
+        <th>Liczba</th>
+        <th>Udział (%)</th>
+        <th>Wymagany</th>
+        <th>Ma synonimy</th>
+        <th>Tylko dla moderatorów</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let tag of tags()" class="tag-row">
+        <td class="tag-name">{{ tag.name }}</td>
+        <td class="tag-count">{{ tag.count }}</td>
+        <td class="tag-share">{{ (tag.share).toFixed(2) }}%</td>
+        <td class="tag-required">{{ tag.isRequired ? '✓' : 'X' }}</td>
+        <td class="tag-has-synonyms">{{ tag.hasSynonyms ? '✓' : 'X' }}</td>
+        <td class="tag-moderator-only">{{ tag.isModeratorOnly ? '✓' : 'X' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- No Data -->
+  <div *ngIf="!isLoading() && tags().length === 0" class="no-data">
+    Brak danych do wyświetlenia
+  </div>
+
+  <!-- Pagination Info -->
+  <div *ngIf="tags().length > 0" class="pagination-info">
+    {{ paginationInfo }}
+  </div>
+
+  <!-- Pagination Controls -->
+  <div *ngIf="totalPages() > 1" class="pagination">
+    <button
+      class="btn btn-prev"
+      (click)="onPageChange(pageNumber() - 1)"
+      [disabled]="pageNumber() === 1"
+    >
+      ← Poprzednia
+    </button>
+
+    <button
+      class="btn btn-next"
+      (click)="onPageChange(pageNumber() + 1)"
+      [disabled]="pageNumber() === totalPages()"
+    >
+      Następna →
+    </button>
+  </div>
+</div>
