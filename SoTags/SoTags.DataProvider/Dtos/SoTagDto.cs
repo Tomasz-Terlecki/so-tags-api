@@ -5,7 +5,7 @@ namespace SoTags.DataProvider.Dtos;
 /// <summary>
 /// DTO for deserializing StackOverflow API tag response
 /// </summary>
-internal record SoTagDto(
+public record SoTagDto(
     [property: JsonPropertyName("name")] string Name,
     [property: JsonPropertyName("count")] int Count,
     [property: JsonPropertyName("has_synonyms")] bool HasSynonyms,

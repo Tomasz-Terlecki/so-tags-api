@@ -3,4 +3,6 @@
   <Project Path="SoTags.Domain/SoTags.Domain.csproj" />
   <Project Path="SoTags.DataProvider/SoTags.DataProvider.csproj" />
   <Project Path="SoTags.Repo/SoTags.Repo.csproj" />
+  <Project Path="SoTags.Tests.Unit/SoTags.Tests.Unit.csproj" />
+  <Project Path="SoTags.Tests.Integration/SoTags.Tests.Integration.csproj" />
 </Solution>
