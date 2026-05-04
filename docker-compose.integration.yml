@@ -1,0 +1,56 @@
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sotags-it-mssql
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "SoTags@Password123"
+      MSSQL_PID: Developer
+    ports:
+      - "1434:1433"
+    volumes:
+      - mssql_data_integration:/var/opt/mssql
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "SoTags@Password123", "-Q", "SELECT 1", "-C"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - sotags-it-network
+
+  api:
+    build:
+      context: .
+      dockerfile: ./SoTags/SoTags.API/Dockerfile
+    container_name: sotags-it-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Integration
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: "Server=mssql,1433;Database=sotags_db_it;User Id=sa;Password=SoTags@Password123;TrustServerCertificate=true;"
+      SoTags__RefetchOnStartup: "false"
+    depends_on:
+      mssql:
+        condition: service_healthy
+    networks:
+      - sotags-it-network
+
+  tests:
+    build:
+      context: .
+      dockerfile: ./SoTags/SoTags.Tests.Integration/Dockerfile
+    container_name: sotags-it-tests
+    environment:
+      API_BASE_URL: "http://sotags-it-api:8080"
+      TEST_CONNECTION_STRING: "Server=mssql,1433;Database=sotags_db_it;User Id=sa;Password=SoTags@Password123;TrustServerCertificate=true;"
+    depends_on:
+      - api
+    networks:
+      - sotags-it-network
+
+volumes:
+  mssql_data_integration:
+
+networks:
+  sotags-it-network:
+    driver: bridge
+

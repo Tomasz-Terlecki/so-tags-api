@@ -52,11 +52,15 @@ using (var scope = app.Services.CreateScope())
     await db.Database.MigrateAsync();
 }
 
-// Refetch tags on application startup
-using (var scope = app.Services.CreateScope())
+// Refetch tags on application startup (can be disabled for integration tests / offline runs)
+var refetchOnStartup = builder.Configuration.GetValue("SoTags:RefetchOnStartup", true);
+if (refetchOnStartup)
 {
-    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-    await mediator.Send(new RefetchTagsCommand { Count = 1000 });
+    using (var scope = app.Services.CreateScope())
+    {
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        await mediator.Send(new RefetchTagsCommand { Count = 1000 });
+    }
 }
 
 // Configure the HTTP request pipeline.
